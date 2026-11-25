@@ -1,0 +1,189 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html,
+  body {
+    background-color: #0a0e1c;
+    color: #ffffff;
+    font-family: 'Albert Sans', sans-serif;
+    overflow-x: hidden;
+  }
+}
+
+/* Responsive iPhone-style frame sizing */
+.phone-frame {
+  aspect-ratio: 390 / 844;
+  width: clamp(210px, 76vw, 330px);
+}
+
+@media (min-width: 768px) {
+  .phone-frame {
+    width: min(25vw, 44vh);
+  }
+}
+
+@media (min-width: 1280px) {
+  .phone-frame {
+    width: min(26vw, 52vh, 390px);
+  }
+}
+
+/* Telemetry Keyframes */
+@keyframes fadeSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeSlideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeSlideLeft {
+  from {
+    opacity: 0;
+    transform: translateX(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeSlideRight {
+  from {
+    opacity: 0;
+    transform: translateX(-40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes speedReveal {
+  0% {
+    opacity: 0;
+    transform: translateX(-100%) skewX(-8deg);
+    filter: blur(8px);
+  }
+  60% {
+    opacity: 1;
+    transform: translateX(4%) skewX(-2deg);
+    filter: blur(0);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0) skewX(0);
+    filter: blur(0);
+  }
+}
+
+@keyframes raceLineLeft {
+  0% {
+    transform: scaleX(0);
+    transform-origin: left;
+  }
+  70% {
+    transform: scaleX(1.08);
+    transform-origin: left;
+  }
+  100% {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+}
+
+.animate-fade-slide-up {
+  animation: fadeSlideUp 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.animate-fade-slide-down {
+  animation: fadeSlideDown 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.animate-fade-slide-left {
+  animation: fadeSlideLeft 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.animate-fade-slide-right {
+  animation: fadeSlideRight 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.animate-scale-in {
+  animation: scaleIn 1s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.8s ease-out both;
+}
+
+.animate-speed-reveal {
+  animation: speedReveal 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.animate-race-line {
+  animation: raceLineLeft 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* Delay utilities */
+.delay-100 { animation-delay: 0.1s; }
+.delay-200 { animation-delay: 0.2s; }
+.delay-300 { animation-delay: 0.3s; }
+.delay-400 { animation-delay: 0.4s; }
+.delay-500 { animation-delay: 0.5s; }
+.delay-600 { animation-delay: 0.6s; }
+.delay-700 { animation-delay: 0.7s; }
+.delay-800 { animation-delay: 0.8s; }
+.delay-900 { animation-delay: 0.9s; }
+.delay-1000 { animation-delay: 1.0s; }
+.delay-1100 { animation-delay: 1.1s; }
+.delay-1200 { animation-delay: 1.2s; }
+.delay-1400 { animation-delay: 1.4s; }
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-slide-up,
+  .animate-fade-slide-down,
+  .animate-fade-slide-left,
+  .animate-fade-slide-right,
+  .animate-scale-in,
+  .animate-fade-in,
+  .animate-speed-reveal,
+  .animate-race-line {
+    animation: none !important;
+  }
+}

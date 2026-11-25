@@ -16,6 +16,8 @@ backend/benchmark_suite_results.json
 # Node
 frontend/node_modules/
 frontend/dist/
+portfolio/node_modules/
+portfolio/dist/
 frontend/.env
 frontend/.env.local
 frontend/.env.development.local
