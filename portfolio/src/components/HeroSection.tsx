@@ -1,8 +1,15 @@
 import React from 'react';
-import { ArrowDown, Github, Cpu, ShieldCheck } from 'lucide-react';
+import { ArrowDown, Github, Cpu } from 'lucide-react';
 import { PhoneMockup } from './PhoneMockup';
 import { PhoneNav } from './PhoneNav';
 import { useCountUp } from '../hooks/useCountUp';
+
+const BG_IMAGE =
+  'https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260709_152331_bd312d1a-1f20-46b9-9b68-12bcdcf6d53e.png&w=1280&q=85';
+const UK_FLAG = 'https://framerusercontent.com/images/pqUTggaeyOivtzDImRzkBRdww.png';
+const MEDAL_ICON = 'https://framerusercontent.com/images/pIXUcwyAF0xzCIaKjtNLahHpasQ.png';
+const SILVERSTONE_IMG =
+  'https://framerusercontent.com/images/raKAG2bJP9xeqi118VMniPLvbAA.png';
 
 interface HeroSectionProps {
   onJumpSection: (id: string) => void;
@@ -15,22 +22,13 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onJumpSection }) => {
 
   return (
     <section className="relative flex min-h-screen w-full flex-col justify-between overflow-hidden bg-[#0a0e1c] font-sans">
-      {/* Atmospheric telemetry grid + subtle radial glow */}
-      <div
-        className="pointer-events-none absolute inset-0 z-0 opacity-25"
-        style={{
-          backgroundImage:
-            'linear-gradient(to right, rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.05) 1px, transparent 1px)',
-          backgroundSize: '56px 56px',
-        }}
+      {/* F1 atmospheric photography + dark overlay */}
+      <img
+        src={BG_IMAGE}
+        alt=""
+        className="pointer-events-none absolute inset-0 z-0 h-full w-full object-cover opacity-55"
       />
-      <div
-        className="pointer-events-none absolute inset-0 z-[1]"
-        style={{
-          background:
-            'radial-gradient(circle at 50% 35%, rgba(225, 6, 0, 0.16) 0%, rgba(237, 180, 11, 0.08) 32%, rgba(10, 14, 28, 0.94) 72%)',
-        }}
-      />
+      <div className="pointer-events-none absolute inset-0 z-[1] bg-gradient-to-b from-black/75 via-black/70 to-[#0a0e1c]" />
 
       {/* Top Portfolio Navigation */}
       <header className="relative z-20 mx-auto flex w-full max-w-7xl items-center justify-between px-6 pt-5 pb-2">
@@ -47,7 +45,21 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onJumpSection }) => {
             onClick={() => onJumpSection('engine-explorer')}
             className="transition-colors hover:text-[#EDB40B]"
           >
-            3D Engine Explorer
+            3D Drum
+          </button>
+          <button
+            type="button"
+            onClick={() => onJumpSection('sandbox')}
+            className="transition-colors hover:text-[#EDB40B]"
+          >
+            Sandbox
+          </button>
+          <button
+            type="button"
+            onClick={() => onJumpSection('about')}
+            className="transition-colors hover:text-[#EDB40B]"
+          >
+            About
           </button>
           <button
             type="button"
@@ -55,13 +67,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onJumpSection }) => {
             className="transition-colors hover:text-[#EDB40B]"
           >
             Architecture
-          </button>
-          <button
-            type="button"
-            onClick={() => onJumpSection('quickstart')}
-            className="transition-colors hover:text-[#EDB40B]"
-          >
-            Quickstart
           </button>
         </nav>
 
@@ -289,6 +294,7 @@ const ScreenSilverstoneMCTS: React.FC<{
 
       <div className="animate-fade-slide-up delay-400 relative z-10 mb-3">
         <div className="flex items-center gap-2 text-[15px] text-white/60">
+          <img src={UK_FLAG} alt="UK" className="h-5 w-5 object-contain" />
           <span>United Kingdom • OpenF1</span>
         </div>
         <h2 className="mt-1 text-[46px] font-normal leading-[0.94] tracking-[-0.05em] text-white">
@@ -298,42 +304,26 @@ const ScreenSilverstoneMCTS: React.FC<{
         </h2>
       </div>
 
-      {/* Stylized Silverstone Circuit Trace */}
+      {/* Silverstone Circuit + Looping Telemetry Pulse */}
       <div className="animate-scale-in delay-600 relative z-10 flex flex-1 items-center justify-center">
-        <svg viewBox="0 0 320 150" className="h-full max-h-[150px] w-full">
-          <path
-            d="M 42 110 L 95 110 L 118 76 L 160 72 L 185 32 L 245 28 L 282 54 L 256 96 L 210 92 L 195 122 L 85 126 Z"
-            fill="none"
-            stroke="rgba(255,255,255,0.22)"
-            strokeWidth="6"
-            strokeLinejoin="round"
-          />
-          <path
-            d="M 42 110 L 95 110 L 118 76 L 160 72 L 185 32 L 245 28 L 282 54 L 256 96 L 210 92 L 195 122 L 85 126 Z"
-            fill="none"
-            stroke="#EDB40B"
-            strokeWidth="2.5"
-            strokeLinejoin="round"
-            strokeDasharray="6 4"
-          />
-          <circle cx="185" cy="32" r="6" fill="#E10600" />
-          <text
-            x="185"
-            y="16"
-            textAnchor="middle"
-            fill="#ffffff"
-            fontSize="10"
-            fontFamily="JetBrains Mono"
-          >
-            SC Lap 33 → Softs
-          </text>
-        </svg>
+        <img
+          src={SILVERSTONE_IMG}
+          alt="Silverstone Circuit"
+          className="h-full max-h-[155px] w-full object-contain opacity-90"
+        />
+        <div className="absolute right-10 top-6 flex items-center gap-2 rounded-full border border-white/15 bg-black/60 px-2.5 py-1 backdrop-blur-md">
+          <span className="relative flex h-2.5 w-2.5">
+            <span className="animate-pulse-ring absolute inline-flex h-full w-full rounded-full bg-[#E10600]" />
+            <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-[#E10600]" />
+          </span>
+          <span className="font-mono text-[10px] text-white">SC Lap 33 → Softs</span>
+        </div>
       </div>
 
       {/* Count-Up Telemetry Numbers */}
       <div className="animate-fade-slide-up delay-800 relative z-10 mt-auto pt-2">
         <div className="mb-2 flex items-center gap-2 text-[13px] text-white/60">
-          <ShieldCheck className="h-4 w-4 text-[#EDB40B]" />
+          <img src={MEDAL_ICON} alt="" className="h-4 w-4 object-contain" />
           <span>Verified Engine Telemetry</span>
         </div>
 
