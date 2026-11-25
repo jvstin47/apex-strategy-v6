@@ -77,7 +77,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onJumpSection }) => {
       </header>
 
       {/* Compact Hero Title Strip */}
-      <div className="relative z-20 mx-auto mt-3 max-w-4xl px-6 text-center md:mt-2">
+      <div className="relative z-20 mx-auto mt-4 max-w-4xl px-6 text-center">
         <div className="animate-fade-slide-down inline-flex items-center gap-2 border border-white/10 bg-white/5 px-3 py-1 text-[11px] font-medium tracking-[0.14em] text-white/75 uppercase backdrop-blur-md">
           <Cpu className="h-3.5 w-3.5 text-[#EDB40B]" />
           <span>Stochastic F1 Race Strategy Simulator &amp; Hybrid MCTS Replanner</span>
@@ -86,14 +86,14 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onJumpSection }) => {
           10,000 Races Simulated.{' '}
           <span className="text-[#EDB40B]">Every Pit Window Solved.</span>
         </h1>
-        <p className="animate-fade-slide-up delay-200 mx-auto mt-2 max-w-2xl text-sm text-white/60 md:text-base">
+        <p className="animate-fade-slide-up delay-200 mx-auto mt-2.5 max-w-2xl text-sm text-white/60 md:text-base">
           A visual walkthrough of Apex Strategy v6—combining vectorized NumPy Monte Carlo,
           4-regime Race Control, 10-car Virtual Grid dynamics, and OpenF1 counterfactual replays.
         </p>
       </div>
 
       {/* Desktop 3-Phone Showcase */}
-      <div className="relative z-[2] hidden w-full items-end justify-center gap-[2.2vw] px-6 pt-6 pb-8 md:flex">
+      <div className="relative z-[2] hidden w-full items-end justify-center gap-6 px-6 pt-8 pb-6 md:flex lg:gap-10">
         {/* Left Phone — Monte Carlo Engine */}
         <div className="animate-fade-slide-up delay-300">
           <PhoneMockup>
@@ -102,7 +102,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onJumpSection }) => {
         </div>
 
         {/* Center Phone — Hybrid MCTS & Silverstone Counterfactual (elevated) */}
-        <div className="animate-fade-slide-up delay-500 -mb-4">
+        <div className="animate-fade-slide-up delay-500 -translate-y-3">
           <PhoneMockup>
             <ScreenSilverstoneMCTS
               runsCount={runsCount}
@@ -188,13 +188,13 @@ const ScreenMonteCarlo: React.FC<{ onJumpSection: (id: string) => void }> = ({ o
       </div>
 
       {/* Two-Phase Tire Cliff SVG Visual */}
-      <div className="animate-scale-in delay-500 relative z-[5] mt-6 flex flex-1 flex-col justify-center">
-        <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+      <div className="animate-scale-in delay-500 relative z-[5] mt-5 flex flex-col gap-3">
+        <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
           <div className="mb-2 flex items-center justify-between text-[11px] font-mono text-white/60">
             <span>TIRE CLIFF MODEL</span>
             <span className="text-[#EDB40B]">2-PHASE DEG</span>
           </div>
-          <svg viewBox="0 0 300 170" className="w-full overflow-visible">
+          <svg viewBox="0 0 300 170" className="h-[170px] w-full overflow-visible">
             {/* Grid */}
             <line x1="0" y1="40" x2="300" y2="40" stroke="rgba(255,255,255,0.08)" />
             <line x1="0" y1="90" x2="300" y2="90" stroke="rgba(255,255,255,0.08)" />
