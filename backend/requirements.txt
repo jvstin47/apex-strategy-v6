@@ -1,0 +1,20 @@
+# Core web framework
+fastapi>=0.128.0
+uvicorn>=0.39.0
+pydantic>=2.13.0
+
+# Data & computation
+numpy>=2.0.0
+pandas>=2.3.0
+scipy>=1.13.0
+
+# HTTP client & Security
+httpx>=0.28.0
+requests>=2.32.0
+certifi>=2024.7.4
+
+# F1 telemetry
+fastf1>=3.7.0
+
+# Testing
+pytest>=8.4.0

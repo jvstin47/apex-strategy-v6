@@ -1,0 +1,354 @@
+{
+  "race_level_scenarios": [
+    {
+      "num_races": 20,
+      "track_id": "bahrain",
+      "v4_classic_vs_dp": {
+        "dp_win_pct": 80.0,
+        "v4_classic_win_pct": 20.0,
+        "tie_pct": 0.0,
+        "mean_time_saved_by_v4_classic": -49.35,
+        "median_time_saved_by_v4_classic": -62.05,
+        "max_time_saved_by_v4_classic": 2110.4,
+        "min_time_saved_by_v4_classic": -1337.91
+      },
+      "v4_classic_exec_seconds": 43.8,
+      "v4_classic_diagnostics": {
+        "high_fidelity_rollouts": 8331,
+        "heuristic_evaluations": 0
+      },
+      "v5_hybrid_vs_dp": {
+        "dp_win_pct": 95.0,
+        "v5_hybrid_win_pct": 5.0,
+        "tie_pct": 0.0,
+        "mean_time_saved_by_v5_hybrid": -52.78,
+        "median_time_saved_by_v5_hybrid": -50.76,
+        "max_time_saved_by_v5_hybrid": 1582.36,
+        "min_time_saved_by_v5_hybrid": -697.76
+      },
+      "v5_hybrid_exec_seconds": 31.8,
+      "v5_hybrid_diagnostics": {
+        "high_fidelity_rollouts": 5518,
+        "heuristic_evaluations": 3500
+      },
+      "v5_hybrid_vs_v4_classic": {
+        "v4_classic_win_pct": 35.0,
+        "v5_hybrid_win_pct": 60.0,
+        "tie_pct": 5.0,
+        "mean_time_saved_by_v5_hybrid": -3.43,
+        "median_time_saved_by_v5_hybrid": 26.06,
+        "max_time_saved_by_v5_hybrid": 1786.41,
+        "min_time_saved_by_v5_hybrid": -2373.58
+      },
+      "group": "A - Ordinary dry race",
+      "scenario_name": "ordinary_dry",
+      "scenario_kwargs": {
+        "track_id": "bahrain",
+        "sc_prob": 0.0,
+        "weather_start_state": "dry"
+      },
+      "suite_exec_seconds": 75.6
+    },
+    {
+      "num_races": 20,
+      "track_id": "silverstone",
+      "v4_classic_vs_dp": {
+        "dp_win_pct": 90.0,
+        "v4_classic_win_pct": 10.0,
+        "tie_pct": 0.0,
+        "mean_time_saved_by_v4_classic": 21.43,
+        "median_time_saved_by_v4_classic": -82.48,
+        "max_time_saved_by_v4_classic": 2149.26,
+        "min_time_saved_by_v4_classic": -200.29
+      },
+      "v4_classic_exec_seconds": 36.1,
+      "v4_classic_diagnostics": {
+        "high_fidelity_rollouts": 6782,
+        "heuristic_evaluations": 0
+      },
+      "v5_hybrid_vs_dp": {
+        "dp_win_pct": 80.0,
+        "v5_hybrid_win_pct": 20.0,
+        "tie_pct": 0.0,
+        "mean_time_saved_by_v5_hybrid": 71.99,
+        "median_time_saved_by_v5_hybrid": -30.35,
+        "max_time_saved_by_v5_hybrid": 2149.26,
+        "min_time_saved_by_v5_hybrid": -892.16
+      },
+      "v5_hybrid_exec_seconds": 33.6,
+      "v5_hybrid_diagnostics": {
+        "high_fidelity_rollouts": 6912,
+        "heuristic_evaluations": 3289
+      },
+      "v5_hybrid_vs_v4_classic": {
+        "v4_classic_win_pct": 25.0,
+        "v5_hybrid_win_pct": 65.0,
+        "tie_pct": 10.0,
+        "mean_time_saved_by_v5_hybrid": 50.57,
+        "median_time_saved_by_v5_hybrid": 48.88,
+        "max_time_saved_by_v5_hybrid": 1165.6,
+        "min_time_saved_by_v5_hybrid": -782.58
+      },
+      "group": "B - Aggressive tire degradation",
+      "scenario_name": "aggressive_degradation_silverstone",
+      "scenario_kwargs": {
+        "track_id": "silverstone",
+        "sc_prob": 0.03,
+        "weather_start_state": "dry"
+      },
+      "suite_exec_seconds": 69.7
+    },
+    {
+      "num_races": 20,
+      "track_id": "bahrain",
+      "v4_classic_vs_dp": {
+        "dp_win_pct": 85.0,
+        "v4_classic_win_pct": 15.0,
+        "tie_pct": 0.0,
+        "mean_time_saved_by_v4_classic": 81.25,
+        "median_time_saved_by_v4_classic": -78.8,
+        "max_time_saved_by_v4_classic": 3237.89,
+        "min_time_saved_by_v4_classic": -1320.77
+      },
+      "v4_classic_exec_seconds": 56.1,
+      "v4_classic_diagnostics": {
+        "high_fidelity_rollouts": 9215,
+        "heuristic_evaluations": 0
+      },
+      "v5_hybrid_vs_dp": {
+        "dp_win_pct": 90.0,
+        "v5_hybrid_win_pct": 10.0,
+        "tie_pct": 0.0,
+        "mean_time_saved_by_v5_hybrid": 69.93,
+        "median_time_saved_by_v5_hybrid": -28.47,
+        "max_time_saved_by_v5_hybrid": 2123.28,
+        "min_time_saved_by_v5_hybrid": -399.58
+      },
+      "v5_hybrid_exec_seconds": 50.0,
+      "v5_hybrid_diagnostics": {
+        "high_fidelity_rollouts": 8851,
+        "heuristic_evaluations": 3569
+      },
+      "v5_hybrid_vs_v4_classic": {
+        "v4_classic_win_pct": 30.0,
+        "v5_hybrid_win_pct": 70.0,
+        "tie_pct": 0.0,
+        "mean_time_saved_by_v5_hybrid": -11.32,
+        "median_time_saved_by_v5_hybrid": 36.03,
+        "max_time_saved_by_v5_hybrid": 1317.87,
+        "min_time_saved_by_v5_hybrid": -3346.84
+      },
+      "group": "C - Elevated Safety Car frequency",
+      "scenario_name": "elevated_safety_car",
+      "scenario_kwargs": {
+        "track_id": "bahrain",
+        "sc_prob": 0.15,
+        "weather_start_state": "dry"
+      },
+      "suite_exec_seconds": 106.1
+    },
+    {
+      "num_races": 20,
+      "track_id": "bahrain",
+      "v4_classic_vs_dp": {
+        "dp_win_pct": 75.0,
+        "v4_classic_win_pct": 25.0,
+        "tie_pct": 0.0,
+        "mean_time_saved_by_v4_classic": 6.23,
+        "median_time_saved_by_v4_classic": -43.15,
+        "max_time_saved_by_v4_classic": 1924.64,
+        "min_time_saved_by_v4_classic": -1041.28
+      },
+      "v4_classic_exec_seconds": 45.6,
+      "v4_classic_diagnostics": {
+        "high_fidelity_rollouts": 6750,
+        "heuristic_evaluations": 0
+      },
+      "v5_hybrid_vs_dp": {
+        "dp_win_pct": 65.0,
+        "v5_hybrid_win_pct": 35.0,
+        "tie_pct": 0.0,
+        "mean_time_saved_by_v5_hybrid": 201.09,
+        "median_time_saved_by_v5_hybrid": -29.56,
+        "max_time_saved_by_v5_hybrid": 3006.0,
+        "min_time_saved_by_v5_hybrid": -1041.28
+      },
+      "v5_hybrid_exec_seconds": 44.3,
+      "v5_hybrid_diagnostics": {
+        "high_fidelity_rollouts": 6810,
+        "heuristic_evaluations": 2561
+      },
+      "v5_hybrid_vs_v4_classic": {
+        "v4_classic_win_pct": 40.0,
+        "v5_hybrid_win_pct": 45.0,
+        "tie_pct": 15.0,
+        "mean_time_saved_by_v5_hybrid": 194.86,
+        "median_time_saved_by_v5_hybrid": 0.0,
+        "max_time_saved_by_v5_hybrid": 3273.65,
+        "min_time_saved_by_v5_hybrid": -1953.26
+      },
+      "group": "D - Weather starting damp",
+      "scenario_name": "damp_start",
+      "scenario_kwargs": {
+        "track_id": "bahrain",
+        "sc_prob": 0.04,
+        "weather_start_state": "damp"
+      },
+      "suite_exec_seconds": 89.8
+    },
+    {
+      "num_races": 20,
+      "track_id": "bahrain",
+      "v4_classic_vs_dp": {
+        "dp_win_pct": 50.0,
+        "v4_classic_win_pct": 50.0,
+        "tie_pct": 0.0,
+        "mean_time_saved_by_v4_classic": -2.45,
+        "median_time_saved_by_v4_classic": 31.16,
+        "max_time_saved_by_v4_classic": 837.28,
+        "min_time_saved_by_v4_classic": -821.99
+      },
+      "v4_classic_exec_seconds": 37.3,
+      "v4_classic_diagnostics": {
+        "high_fidelity_rollouts": 4700,
+        "heuristic_evaluations": 0
+      },
+      "v5_hybrid_vs_dp": {
+        "dp_win_pct": 65.0,
+        "v5_hybrid_win_pct": 35.0,
+        "tie_pct": 0.0,
+        "mean_time_saved_by_v5_hybrid": -52.34,
+        "median_time_saved_by_v5_hybrid": -51.56,
+        "max_time_saved_by_v5_hybrid": 837.28,
+        "min_time_saved_by_v5_hybrid": -654.04
+      },
+      "v5_hybrid_exec_seconds": 27.8,
+      "v5_hybrid_diagnostics": {
+        "high_fidelity_rollouts": 3457,
+        "heuristic_evaluations": 1031
+      },
+      "v5_hybrid_vs_v4_classic": {
+        "v4_classic_win_pct": 40.0,
+        "v5_hybrid_win_pct": 30.0,
+        "tie_pct": 30.0,
+        "mean_time_saved_by_v5_hybrid": -49.89,
+        "median_time_saved_by_v5_hybrid": 0.0,
+        "max_time_saved_by_v5_hybrid": 795.35,
+        "min_time_saved_by_v5_hybrid": -810.27
+      },
+      "group": "D - Weather starting wet",
+      "scenario_name": "wet_start",
+      "scenario_kwargs": {
+        "track_id": "bahrain",
+        "sc_prob": 0.04,
+        "weather_start_state": "wet"
+      },
+      "suite_exec_seconds": 65.2
+    }
+  ],
+  "edge_case_scenarios": [
+    {
+      "name": "fresh_tires_race_start",
+      "state": "L1 | MEDIUM (Age 1) | W:dry | SC:False | Stops:0",
+      "v4_classic_action": "pit_soft",
+      "v4_classic_expected_time": 6134.44,
+      "v5_hybrid_action": "pit_hard",
+      "v5_hybrid_expected_time": 6112.97,
+      "agree": false,
+      "v5_diagnostics": {
+        "nodes_created": 400,
+        "heuristic_evaluations": 168,
+        "high_fidelity_rollouts": 234,
+        "trigger_counts": {
+          "pit_stop": 63,
+          "safety_car": 60,
+          "weather": 127,
+          "adaptive_refinement": 2
+        }
+      }
+    },
+    {
+      "name": "worn_tires_one_stop_left",
+      "state": "L40 | HARD (Age 22) | W:dry | SC:False | Stops:1",
+      "v4_classic_action": "pit_medium",
+      "v4_classic_expected_time": 1738.41,
+      "v5_hybrid_action": "pit_soft",
+      "v5_hybrid_expected_time": 1749.99,
+      "agree": false,
+      "v5_diagnostics": {
+        "nodes_created": 265,
+        "heuristic_evaluations": 40,
+        "high_fidelity_rollouts": 227,
+        "trigger_counts": {
+          "pit_stop": 9,
+          "safety_car": 38,
+          "weather": 100,
+          "late_race": 176,
+          "adaptive_refinement": 2
+        }
+      }
+    },
+    {
+      "name": "zero_stops_remaining_late",
+      "state": "L50 | HARD (Age 12) | W:dry | SC:False | Stops:2",
+      "v4_classic_action": "stay_out",
+      "v4_classic_expected_time": 684.0,
+      "v5_hybrid_action": "stay_out",
+      "v5_hybrid_expected_time": 684.57,
+      "agree": true,
+      "v5_diagnostics": {
+        "nodes_created": 74,
+        "heuristic_evaluations": 0,
+        "high_fidelity_rollouts": 75,
+        "trigger_counts": {
+          "late_race": 74,
+          "weather": 30,
+          "safety_car": 11,
+          "adaptive_refinement": 1
+        }
+      }
+    },
+    {
+      "name": "unusual_start_compound_hard_early",
+      "state": "L3 | HARD (Age 3) | W:dry | SC:False | Stops:0",
+      "v4_classic_action": "pit_medium",
+      "v4_classic_expected_time": 5888.24,
+      "v5_hybrid_action": "stay_out",
+      "v5_hybrid_expected_time": 5769.79,
+      "agree": false,
+      "v5_diagnostics": {
+        "nodes_created": 400,
+        "heuristic_evaluations": 178,
+        "high_fidelity_rollouts": 224,
+        "trigger_counts": {
+          "pit_stop": 65,
+          "weather": 122,
+          "safety_car": 71,
+          "adaptive_refinement": 2
+        }
+      }
+    },
+    {
+      "name": "rain_with_stops_in_reserve",
+      "state": "L20 | MEDIUM (Age 10) | W:wet | SC:False | Stops:0",
+      "v4_classic_action": "pit_intermediate",
+      "v4_classic_expected_time": 4464.28,
+      "v5_hybrid_action": "pit_intermediate",
+      "v5_hybrid_expected_time": 4483.1,
+      "agree": true,
+      "v5_diagnostics": {
+        "nodes_created": 400,
+        "heuristic_evaluations": 69,
+        "high_fidelity_rollouts": 333,
+        "trigger_counts": {
+          "weather": 285,
+          "pit_stop": 176,
+          "safety_car": 42,
+          "adaptive_refinement": 2
+        }
+      }
+    }
+  ],
+  "edge_case_agreement_rate_pct": 40.0,
+  "group_e_traffic_undercut": "out of scope -- see module docstring"
+}
