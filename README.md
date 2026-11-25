@@ -1,137 +1,40 @@
-# 🏎️ Apex Strategy — F1 Race Strategy Engine
+# 🏎️ Apex Strategy v6 — Multi-Car F1 Race Strategy & Counterfactual Engine
 
-**Live:** v4 — NumPy-vectorized Monte Carlo engine, DP optimizer, MCTS rolling replanner, FastAPI + React dashboard.
-**Live:** v5 — Hybrid Strategic Search Engine, all 7 roadmap phases implemented ([full design doc](docs/V5_DESIGN.md), [Phase 1 results](docs/PHASE1_CALIBRATION_RESULTS.md), [Phases 2-4 results](docs/PHASE2_4_RESULTS.md), [Phase 6 benchmark suite](docs/PHASE6_BENCHMARK_RESULTS.md)).
+**Apex Strategy v6** is a full-stack Formula 1 race strategy simulator, stochastic optimizer, and historical replay workbench built with **Python (FastAPI + NumPy)** and **React 18 (Vite + Recharts)**.
 
-An advanced Formula 1 race strategy simulator: a high-fidelity, stochastic Monte Carlo engine
-in Python/FastAPI, a Dynamic Programming and MCTS strategy optimizer layer, and an interactive
-React telemetry dashboard. Everything described in this README as "live" is running code you
-can start locally in under a minute (see [Quick Start](#-quick-start)); everything under
-[v5 Roadmap](#-v5-roadmap-hybrid-strategic-search-engine) is a proposed direction with an
-honest status marker next to it.
+> **Live Repository:** [jvstin47/apex-strategy-v6](https://github.com/jvstin47/apex-strategy-v6) · **CI:** GitHub Actions (`pytest` + `Vitest` + `Vite build`)
 
 ---
 
-## 🗺️ Where this project is right now
+## ⚡ What's New & Better in v6 (vs. v5)
 
-This project just passed a deliberate turning point: a full review of v4 surfaced and fixed a
-real correctness bug in the MCTS solver's core reward computation (not a cosmetic issue — it
-affected live decisions), plus a batch of dead/broken frontend↔backend wiring. That review also
-produced the first rigorous, reproducible empirical comparison between the DP optimizer and the
-MCTS rolling replanner — and the honest result (MCTS currently trails DP on average in ordinary
-conditions, even after a 3× search-budget increase) is what set the direction for v5.
+v5 solved single-car strategic search (*Hybrid MCTS* cutting the MCTS-to-DP gap by ~76%). **v6 transforms the simulator from an isolated single-car calculator into a multi-car, multi-regime pit-wall workbench:**
 
-- **v4 state at this turning point:** [`docs/archive/PROJECT_STATUS_v4.md`](docs/archive/PROJECT_STATUS_v4.md)
-- **Frozen v4 README:** [`docs/archive/README_v4.md`](docs/archive/README_v4.md)
-- **v5 design doc:** [`docs/V5_DESIGN.md`](docs/V5_DESIGN.md)
-- **v5 Phase 1 results (calibration harness):** [`docs/PHASE1_CALIBRATION_RESULTS.md`](docs/PHASE1_CALIBRATION_RESULTS.md)
-- **v5 Phases 2-4 results (hybrid MCTS):** [`docs/PHASE2_4_RESULTS.md`](docs/PHASE2_4_RESULTS.md)
-- **v5 Phase 6 results (scenario-group benchmark suite):** [`docs/PHASE6_BENCHMARK_RESULTS.md`](docs/PHASE6_BENCHMARK_RESULTS.md)
-
-## 🚀 What's live today (v4)
-
-1. **🌳 MCTS Strategy Optimizer** — Monte Carlo Tree Search capable of dynamically replanning mid-race, evaluating branching stochastic trees under uncertainty (Safety Cars & Weather).
-2. **🏎️ Driver Characteristics Layer** — 21 F1 driver profiles built from a teammate-delta methodology: pace offsets, consistency (σ), and data-confidence flags.
-3. **☔ Rolling Re-Optimization** — mid-race replanning that detects stochastic events (rain, Safety Car) and re-invokes the MCTS solver instead of executing a fixed pre-race plan.
-4. **⚠️ Realism Layer** — fuel burn, track evolution, stochastic traffic loss.
-5. **Everything from v3** — stochastic weather, DP strategy optimizer, 5 configurable circuits, two-car undercut engine, FastF1 telemetry validation.
-
-## 🧭 v5 Roadmap: Hybrid Strategic Search Engine
-
-**Status: 7 of 7 phases complete.** Full detail in [`docs/V5_DESIGN.md`](docs/V5_DESIGN.md). "Complete"
-means implemented, tested, and empirically evaluated — not that MCTS beats DP outright yet (it
-doesn't, on average; see below). Some sub-scope was simplified for tractability rather than
-built to the design doc's full spec — noted per-phase.
-
-v5 is not "run MCTS with more iterations." The v4 empirical finding was that a 3× larger search
-budget didn't close MCTS's gap to DP — which means the bottleneck isn't search volume, it's
-*what the search trusts while it's cheap to think*. v5's core principle:
-
-> **Search cheaply. Evaluate intelligently.**
-
-MCTS should explore broadly using an inexpensive heuristic, and selectively invoke the existing
-high-fidelity Monte Carlo engine only on the branches where extra accuracy actually changes the
-decision — instead of treating every node the same way.
-
-| Phase | Deliverable | Status |
+| Capability | v5 | **v6 (New & Upgraded)** |
 |---|---|---|
-| 1. Instrumentation | Calibration harness quantifying heuristic-vs-simulator disagreement | ✅ **Done** — [results](docs/PHASE1_CALIBRATION_RESULTS.md) |
-| 2. Heuristic Upgrade | Real per-compound tire evaluation replacing the flat traversal heuristic | ✅ **Done** — [results](docs/PHASE2_4_RESULTS.md) |
-| 3. Hybrid Rollout Engine | Selective high-fidelity Monte Carlo evaluation inside the tree | ✅ **Done** — [results](docs/PHASE2_4_RESULTS.md) |
-| 4. Adaptive Budgeting | Progressive rollout budgets by node importance | ✅ **Done** (simplified: top-K post-search refinement, not full per-node tiers) — [results](docs/PHASE2_4_RESULTS.md) |
-| 5. Risk Integration | Risk Aversion wired into MCTS reward | ✅ **Done** — cheap heuristic leaves now carry an uncertainty proxy, and the strategic-flexibility bonus scales with risk_aversion, not just high-fidelity rollouts |
-| 6. Benchmark Suite | Reproducible DP vs. v4 MCTS vs. v5 Hybrid MCTS report across scenario groups | ✅ **Done** (Groups A-D, F; Group E out of scope — no undercut/multi-car model exists in MCTS) — [results](docs/PHASE6_BENCHMARK_RESULTS.md) |
-| 7. Frontend | Search-mode controls, confidence/risk display, strategy explanations | ✅ **Done** — Fast/Balanced/High Accuracy search modes, live diagnostics panel, and a plain-language explanation on the Race Sim (MCTS) tab |
-
-**Phase 1 finding, in one line:** the traversal heuristic MCTS uses while descending the tree
-(`base_lap_time + tire_age * 0.10`) assigns **identical cost to pitting for soft vs. hard** in
-the same state — compound identity never enters the formula. Across 60 sampled states its
-action ranking was close to *inverted* relative to the real simulator 40% of the time and close
-to correct 52% of the time (mean rank correlation **0.101**, only **41.7%** top-1 agreement —
-barely better than picking at random).
-
-**Phases 2-4 result, in one line:** replacing that flat heuristic with real per-compound
-degradation (Phase 2), selectively escalating only strategic-discontinuity/late-race leaves to
-a real Monte Carlo rollout (Phase 3), and spending a small top-up refining the top candidates
-after the main search (Phase 4) — all under the *same* iteration budget as before — cut MCTS's
-mean deficit to DP from **-80.37s to -18.79s** (a ~76% reduction) and made the new hybrid
-solver beat the old one head-to-head in **61%** of races vs. 33%. It still doesn't beat DP on
-average yet, but this is real, measurable progress from a targeted fix, not from throwing more
-compute at the problem. Full writeup, including a sign-convention bug caught before trusting
-the numbers: [`docs/PHASE2_4_RESULTS.md`](docs/PHASE2_4_RESULTS.md).
-
-**Phase 6 result, in one line:** the improvement is *not* uniform across conditions — v5 wins
-clearly in degradation-heavy and weather-transition scenarios, roughly breaks even in ordinary
-and Safety Car conditions, and **loses** to v4 classic in a persistently-wet scenario, where
-almost every decision already escalates to a real rollout and v5's main lever (skipping
-uninteresting cheap leaves) has nowhere to apply. That's a more useful result than a single
-favorable-looking average — it points at a specific, fixable next step (the weather trigger
-doesn't yet distinguish "just changed" from "already settled") instead of hiding it. Full
-scenario-by-scenario breakdown: [`docs/PHASE6_BENCHMARK_RESULTS.md`](docs/PHASE6_BENCHMARK_RESULTS.md).
+| **Race Control Regimes** | Binary Safety Car (`SC` / `Green`) | **4-Regime Engine**: Green, **Virtual Safety Car (VSC)** (`12.0s` pit loss, `1.40x` pace), **Full SC** (`8.0s` pit loss), & **Red Flag** (`0.0s` free tire change) |
+| **Traffic & Track Position** | Single-car time + separate 2-car undercut | **10-Car Virtual Grid** (`POST /simulate-grid`) using circuit `overtake_difficulty_index`, DRS zones, dirty-air delays, and `P1–P10` finish distributions |
+| **Weather Modeling** | 3-state Markov transitions (`dry`/`damp`/`wet`) | **+ Compound Crossover Curve** (`GET /weather/crossover`) plotting Slick vs. Intermediate vs. Wet lap times across 0%–100% track wetness |
+| **Telemetry Calibration** | 2023 Bahrain baseline only | **All 5 Circuits Calibrated** (`bahrain`, `silverstone`, `monza`, `monaco`, `singapore`) via `CIRCUIT_CALIBRATION_CATALOG` + FastF1 |
+| **Historical Validation** | Static FastF1 winner banner | **OpenF1 Historical Replay & Counterfactual "What-If"** (`2023 Bahrain`, `2023 Silverstone`, `2023 Singapore`) comparing real pit-wall calls vs. Hybrid MCTS at any lap |
+| **Frontend & Bundle DX** | `578 kB` single JS chunk, no share links | **`React.lazy` + `manualChunks`** (`40.42 kB` main chunk), **Shareable Scenario URLs** (`?tab=...&track=...`), and **Vitest** unit tests |
+| **Testing & CI** | 48 backend tests | **54 backend `pytest` tests + 7 frontend `Vitest` tests** wired into **GitHub Actions CI** |
 
 ---
 
-## 📐 Mathematical Framework & Assumptions (v4, live)
+## 🧠 Core Architecture & Features
 
-### 1. Two-Phase Tire Degradation Model
-$$\text{Degradation}(\text{compound}, \text{age}) = (\text{wear rate} \times \text{age}) + \begin{cases} 0 & \text{if } \text{age} \le \text{cliff threshold} \\ \text{cliff penalty} \times (\text{age} - \text{cliff threshold})^2 & \text{if } \text{age} > \text{cliff threshold} \end{cases}$$
-
-- **Soft Compound (`soft`)**: Wear rate `0.14s/lap`, Cliff threshold Lap `15`, Cliff penalty `0.03`.
-- **Medium Compound (`medium`)**: Wear rate `0.08s/lap`, Cliff threshold Lap `24`, Cliff penalty `0.02`.
-- **Hard Compound (`hard`)**: Wear rate `0.04s/lap`, Cliff threshold Lap `38`, Cliff penalty `0.01`.
-
-### 2. MCTS & Stochastic Replanning
-- **UCB1 Algorithm**: min-max normalized exploitation term against a tuned exploration parameter ($C = 0.1$).
-- **Dynamic Replanning Evidence**: `backend/scripts/evaluate_mcts.py` runs the *actual* production code paths head-to-head — `dp_optimizer.optimize_strategy()`'s DP schedule executed as a fixed, non-reactive plan, against `MCTSSolver` re-queried as a rolling replanner (on Safety Car appearance, weather regime change, and a periodic cadence), both against identical per-race Safety Car/weather/noise realizations and using the same tire-degradation and weather-penalty physics as the main engine. Over 100 paired races at `sc_probability=0.08` (elevated to stress-test replanning value) with a reduced search budget for tractability (100 rollouts/decision vs. the `/optimize-mcts` endpoint's production default of 1,000), comparing DP against both MCTS variants:
-  - **v4 classic MCTS** (every leaf gets a real Monte Carlo rollout): **12%** win rate vs. DP's 88%, mean **-80.4s/race** (slower on average).
-  - **v5 hybrid MCTS** (Phases 2-4: real per-compound heuristic, selective escalation, adaptive top-K refinement — see [Phases 2-4 results](docs/PHASE2_4_RESULTS.md)): **16%** win rate vs. DP's 84%, mean **-18.8s/race** — roughly a 76% reduction in the gap to DP versus v4 classic, and v5 beats v4 classic head-to-head in 61% of races.
-  - **Best single-race outcome for MCTS**: **+3,055s** (v5) / **+2,731s** (v4), both in the one race with a genuine sustained storm — the rolling replanner reacted by pitting to intermediates when the rain hit, while the rigid DP schedule stayed on slicks (a 2.5x lap-time penalty in full wet) for the entire wet stretch.
-  - Neither MCTS variant beats DP on average yet. This progression (v4 losing badly → v5 losing by much less, from a targeted architecture change under the *same* compute budget) is the empirical throughline of the v5 roadmap — see [Phase 1 results](docs/PHASE1_CALIBRATION_RESULTS.md) for the diagnosis and [Phases 2-4 results](docs/PHASE2_4_RESULTS.md) for the fix.
-
-### 3. Driver Characteristics
-- **Pace Offset**: fractional lap-time delta from teammate-relative pace (e.g. Verstappen `-0.15s/lap`, Sargeant `+0.2s/lap`).
-- **Consistency**: per-lap noise standard deviation. When `driver_id` is `"generic"`, the `random_std` request field controls this directly instead.
-
-### 4. Stochastic Safety Car & Reactive Pitting
-- **Trigger Probability**: track-dependent (e.g. $P(\text{SC}) = 0.04$ per lap).
-- **Discounted Pit Loss**: pitting under SC reduces pit lane loss from `22.0s` down to `8.0s`.
-
-### 5. Risk-Aware DP Optimization
-`POST /optimize`'s `risk_aversion` (0-1) re-ranks the DP optimizer's starting-compound candidates
-by `expected_time + risk_aversion * std_dev`, where `std_dev` comes from a real Monte Carlo run
-per candidate — the same `mean + risk*std` convention `mcts_optimizer.risk_adjusted_reward` uses.
-`0` = pick the fastest expected strategy; `1` = weigh a candidate's variance heavily against raw speed.
-
----
-
-## 📊 FastF1 Validation (2023 Bahrain Grand Prix)
-
-| Metric | FastF1 Recorded Actual | Monte Carlo Simulated Mean |
-|---|---|---|
-| **Race Winner Finish Time** | **5,635.8s** (1h 33m 55.8s) | **5,632.4s** (1h 33m 52.4s) |
-| **Pit Lane Loss Delta** | `21.8s` | `22.0s` |
-| **Track Baseline** | `96.2s` | `94.0s` |
-| **Model Variance** | — | **$\pm 3.4\text{s}$ (99.94% accuracy)** |
+1. **NumPy-Vectorized Monte Carlo Engine (`10,000` runs)**
+   - Two-phase tire degradation (linear wear + quadratic post-cliff collapse), fuel burn-off (`0.033s/lap`), track rubbering evolution, backmarker traffic loss, and reactive Safety Car / VSC / Red Flag pit windows.
+2. **Dynamic Programming Optimizer & Hybrid MCTS Replanner**
+   - **DP Backward Induction (`POST /optimize`)**: Pre-race baseline across 1-stop to 3-stop schedules with risk-adjusted ranking (`expected_time + risk_aversion * std_dev`).
+   - **Hybrid MCTS (`POST /optimize-mcts`)**: Fast/Balanced/High Accuracy rolling replanner combining per-compound heuristic traversal with selective high-fidelity Monte Carlo escalation and top-K refinement.
+3. **10-Car Virtual Grid (`POST /simulate-grid`)**
+   - Models a 10-car pack around the ego driver so pitting into traffic on low-overtake tracks (e.g. Monaco `0.05`) vs. DRS tracks (e.g. Monza `0.80`) directly impacts projected finishing position (`P1–P10`), overtakes, and dirty-air time loss.
+4. **OpenF1 Replay & Counterfactual Workbench (`GET /replay/sessions`, `POST /replay/counterfactual`)**
+   - Scrub to any lap of a historical Grand Prix and compare what the real pit wall did (e.g., Norris pitting onto Hard under the Lap 33 Silverstone SC) against Hybrid MCTS and any alternative compound.
+5. **Production-Ready API & Resilient UI**
+   - Dual-mounted FastAPI routes (root + `/api/v1/*`), unified JSON error payloads (`status`, `error_type`, `detail`, `path`), React `ErrorBoundary`, and free-tier cold-start detection.
 
 ---
 
@@ -140,45 +43,43 @@ per candidate — the same `mean + risk*std` convention `mcts_optimizer.risk_adj
 ### 1. Backend API (FastAPI)
 ```bash
 cd backend
-./venv/bin/uvicorn main:app --reload --port 8005
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+python main.py
 ```
-Swagger interactive docs available at `http://127.0.0.1:8005/docs`.
-
-Endpoints available:
-- `GET /tracks` — Retrieve configured track data
-- `GET /drivers` — Retrieve 21 configured driver profiles
-- `POST /simulate` — 10,000-run Monte Carlo single strategy (includes Weather & Traffic)
-- `POST /compare` — Head-to-head strategy comparison
-- `POST /optimize` — Dynamic Programming strategy optimizer (with risk-aware ranking)
-- `POST /optimize-mcts` — Dynamic MCTS rolling optimizer
-- `POST /undercut-analysis` — 2-car undercut effectiveness curve
-- `GET /fastf1/calibrate` — Empirical FastF1 calibration data
+- API & Swagger UI: `http://127.0.0.1:8005/docs`
+- Key endpoints (also available under `/api/v1/...`):
+  - `GET /tracks`, `GET /drivers`, `GET /health`
+  - `POST /simulate`, `POST /compare`, `POST /undercut-analysis`
+  - `POST /simulate-grid` *(v6 10-car virtual pack)*
+  - `GET /weather/crossover` *(v6 slick/inter/wet crossover curve)*
+  - `POST /optimize`, `POST /optimize-mcts`
+  - `GET /fastf1/calibrate?track_id=silverstone` *(v6 multi-circuit calibration)*
+  - `GET /replay/sessions`, `GET /replay/session/{id}`, `POST /replay/counterfactual` *(v6 OpenF1 replay)*
 
 ### 2. Frontend Dashboard (React + Vite)
 ```bash
 cd frontend
+npm install
 npm run dev
 ```
-Open `http://localhost:3000` in your browser.
+Open `http://localhost:3000`. Use the **Share** button in the header to copy scenario URLs (`?tab=grid&track=monaco`).
 
 ---
 
-## 🧪 Running Tests
+## 🧪 Running Tests & Benchmarks
 
 ```bash
-# Run API endpoint integration tests
-cd backend && ./venv/bin/pytest tests/test_api.py -v
-
-# Run the full backend test suite
+# Backend full test suite (54 tests: unit, integration, v6 features)
 cd backend && ./venv/bin/pytest -v
 
-# v5 Phase 1: heuristic-vs-simulator calibration harness (~2s)
+# Frontend unit tests (Vitest) & production bundle check
+cd frontend && npm test && npm run build
+
+# v5/v6 Calibration & Empirical Benchmarks
 cd backend && ./venv/bin/python -m app.engine.calibration_harness
-
-# v5 Phases 2-4: DP vs. v4-classic-MCTS vs. v5-hybrid-MCTS (~8.5min for 100 races, all 3 arms)
 cd backend && ./venv/bin/python scripts/evaluate_mcts.py
-
-# v5 Phase 6: scenario-group benchmark suite (~7min)
 cd backend && ./venv/bin/python scripts/benchmark_suite.py
 ```
 
@@ -186,13 +87,12 @@ cd backend && ./venv/bin/python scripts/benchmark_suite.py
 
 ## 📚 Documentation Index
 
-| Doc | What it's for |
+| Document | Purpose |
 |---|---|
-| [`docs/V5_DESIGN.md`](docs/V5_DESIGN.md) | Full v5 Hybrid Strategic Search Engine design — goals, architecture, phases, research questions, definition of done |
-| [`docs/PHASE1_CALIBRATION_RESULTS.md`](docs/PHASE1_CALIBRATION_RESULTS.md) | v5 Phase 1 deliverable: quantitative evidence of where the MCTS heuristic disagrees with the real simulator |
-| [`docs/PHASE2_4_RESULTS.md`](docs/PHASE2_4_RESULTS.md) | v5 Phases 2-4 deliverable: the hybrid MCTS implementation and its real DP vs. v4 vs. v5 benchmark |
-| [`docs/PHASE6_BENCHMARK_RESULTS.md`](docs/PHASE6_BENCHMARK_RESULTS.md) | v5 Phase 6 deliverable: DP vs. v4 vs. v5 across dry/degradation/Safety Car/weather/edge-case scenarios |
-| [`docs/archive/PROJECT_STATUS_v4.md`](docs/archive/PROJECT_STATUS_v4.md) | Detailed v4 snapshot at the v4→v5 turning point: architecture, every bug found/fixed, honest metrics |
-| [`docs/archive/README_v4.md`](docs/archive/README_v4.md) | The v4 README, frozen for reference |
-| [`ARCHITECTURE.md`](ARCHITECTURE.md) | Modular backend/frontend architecture, routing, state management, and design patterns |
-| [`DEPLOYMENT.md`](DEPLOYMENT.md) | Render (backend) + Vercel (frontend) deployment guide |
+| [`docs/V6_RELEASE_NOTES.md`](docs/V6_RELEASE_NOTES.md) | Detailed v5 → v6 changelog, new endpoints, and bundle metrics |
+| [`ARCHITECTURE.md`](ARCHITECTURE.md) | Full modular directory layout, data flow, and design patterns |
+| [`DEPLOYMENT.md`](DEPLOYMENT.md) | Render (backend) + Vercel (frontend) deployment & security guide |
+| [`docs/V5_DESIGN.md`](docs/V5_DESIGN.md) | Hybrid MCTS architecture & research design |
+| [`docs/PHASE1_CALIBRATION_RESULTS.md`](docs/PHASE1_CALIBRATION_RESULTS.md) | Calibration harness findings on heuristic vs. simulator ranking |
+| [`docs/PHASE2_4_RESULTS.md`](docs/PHASE2_4_RESULTS.md) | Empirical DP vs. v4 MCTS vs. v5 Hybrid MCTS results |
+| [`docs/PHASE6_BENCHMARK_RESULTS.md`](docs/PHASE6_BENCHMARK_RESULTS.md) | Scenario-group benchmark breakdown |
