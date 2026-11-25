@@ -54,7 +54,7 @@ export const PhoneMockup: React.FC<PhoneMockupProps> = ({ children, className = 
           {/* Dynamic Island */}
           <div className="pointer-events-none absolute left-1/2 top-[2.6%] z-50 h-[3.6%] w-[30%] -translate-x-1/2 rounded-full bg-black" />
 
-          {/* Scaled 390px-wide canvas */}
+          {/* Scaled 390px-wide canvas (absolute so it never alters parent intrinsic width) */}
           <div
             style={{
               width: 390,
@@ -62,7 +62,7 @@ export const PhoneMockup: React.FC<PhoneMockupProps> = ({ children, className = 
               transform: `scale(${scale})`,
               transformOrigin: 'top left',
             }}
-            className="relative overflow-hidden"
+            className="absolute left-0 top-0 overflow-hidden"
           >
             {children}
           </div>

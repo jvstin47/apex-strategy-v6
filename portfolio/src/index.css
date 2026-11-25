@@ -12,7 +12,7 @@
   }
 }
 
-/* Responsive iPhone-style frame sizing (bounded by height so it never overflows 100vh) */
+/* Responsive iPhone-style frame sizing (explicit 390:844 ratio bounded by viewport height) */
 .phone-frame {
   aspect-ratio: 390 / 844;
   width: clamp(220px, 72vw, 310px);
@@ -20,15 +20,15 @@
 
 @media (min-width: 768px) {
   .phone-frame {
-    width: auto;
-    height: clamp(420px, 58vh, 560px);
+    height: clamp(440px, 58vh, 560px);
+    width: calc(clamp(440px, 58vh, 560px) * 390 / 844);
   }
 }
 
 @media (min-width: 1280px) {
   .phone-frame {
-    width: auto;
     height: clamp(480px, 62vh, 620px);
+    width: calc(clamp(480px, 62vh, 620px) * 390 / 844);
   }
 }
 
