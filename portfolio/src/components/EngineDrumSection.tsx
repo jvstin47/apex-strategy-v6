@@ -194,78 +194,80 @@ export const EngineDrumSection: React.FC = () => {
       {/* Main Split: 3D Drum Left + Live Module Inspector Right */}
       <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-12">
         {/* 3D Cylindrical Drum Stage */}
-        <div
-          ref={stageRef}
-          tabIndex={0}
-          onKeyDown={(e) => {
-            if (e.key === 'ArrowDown' || e.key === 'PageDown' || e.key === ' ') {
-              e.preventDefault();
-              stepDrum(1);
-            } else if (e.key === 'ArrowUp' || e.key === 'PageUp') {
-              e.preventDefault();
-              stepDrum(-1);
-            }
-          }}
-          onPointerDown={handlePointerDown}
-          onPointerMove={handlePointerMove}
-          onPointerUp={handlePointerUp}
-          onPointerCancel={handlePointerUp}
-          className="relative h-[440px] select-none overflow-hidden rounded-2xl border border-white/10 bg-white/[0.02] outline-none touch-none lg:col-span-5"
-          style={{ perspective: `${PERSPECTIVE_PX}px` }}
-        >
-          {/* Subtle top/bottom fade masks */}
-          <div className="pointer-events-none absolute inset-x-0 top-0 z-20 h-20 bg-gradient-to-b from-[#0a0e1c] to-transparent" />
-          <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20 h-20 bg-gradient-to-t from-[#0a0e1c] to-transparent" />
-
+        <div className="lg:col-span-5">
           <div
-            className="absolute left-1/2 top-1/2"
-            style={{
-              transformStyle: 'preserve-3d',
-              transform: `translateZ(-${DRUM_RADIUS}px) rotateX(${displayAngle}deg)`,
+            ref={stageRef}
+            tabIndex={0}
+            onKeyDown={(e) => {
+              if (e.key === 'ArrowDown' || e.key === 'PageDown' || e.key === ' ') {
+                e.preventDefault();
+                stepDrum(1);
+              } else if (e.key === 'ArrowUp' || e.key === 'PageUp') {
+                e.preventDefault();
+                stepDrum(-1);
+              }
             }}
+            onPointerDown={handlePointerDown}
+            onPointerMove={handlePointerMove}
+            onPointerUp={handlePointerUp}
+            onPointerCancel={handlePointerUp}
+            className="relative h-[440px] select-none overflow-hidden rounded-2xl border border-white/10 bg-white/[0.02] outline-none touch-none"
+            style={{ perspective: `${PERSPECTIVE_PX}px` }}
           >
-            {DRUM_MODULES.map((mod, i) => {
-              const thetaDeg = displayAngle - STEP_DEG * i;
-              const thetaRad = (thetaDeg * Math.PI) / 180;
-              const cosT = Math.cos(thetaRad);
-              const isFront = cosT > 0.15;
-              const isActive = i === activeIndex;
+            {/* Subtle top/bottom fade masks */}
+            <div className="pointer-events-none absolute inset-x-0 top-0 z-20 h-28 bg-gradient-to-b from-[#0a0e1c] via-[#0a0e1c]/70 to-transparent" />
+            <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20 h-28 bg-gradient-to-t from-[#0a0e1c] via-[#0a0e1c]/70 to-transparent" />
 
-              return (
-                <div
-                  key={mod.id}
-                  onClick={() => jumpToIndex(i)}
-                  style={{
-                    transformStyle: 'preserve-3d',
-                    transform: `rotateX(-${STEP_DEG * i}deg) translateZ(${DRUM_RADIUS}px)`,
-                    backfaceVisibility: 'hidden',
-                    opacity: isFront ? Math.max(0.25, cosT) : 0.12,
-                  }}
-                  className={`absolute -left-[145px] -top-[78px] h-[156px] w-[290px] cursor-pointer rounded-xl border p-4 transition-colors ${
-                    isActive
-                      ? 'border-[#EDB40B] bg-[#14141e]/95 shadow-[0_0_30px_rgba(237,180,11,0.18)]'
-                      : 'border-white/10 bg-[#14141e]/75 hover:border-white/30'
-                  }`}
-                >
-                  <div className="flex items-center justify-between text-[11px] font-mono">
-                    <span style={{ color: mod.accent }}>
-                      {mod.index} // {mod.category.toUpperCase()}
-                    </span>
-                    <span className="text-white/40">{mod.metricValue}</span>
+            <div
+              className="absolute left-1/2 top-1/2"
+              style={{
+                transformStyle: 'preserve-3d',
+                transform: `translateZ(-${DRUM_RADIUS}px) rotateX(${displayAngle}deg)`,
+              }}
+            >
+              {DRUM_MODULES.map((mod, i) => {
+                const thetaDeg = displayAngle - STEP_DEG * i;
+                const thetaRad = (thetaDeg * Math.PI) / 180;
+                const cosT = Math.cos(thetaRad);
+                const isFront = cosT > 0.15;
+                const isActive = i === activeIndex;
+
+                return (
+                  <div
+                    key={mod.id}
+                    onClick={() => jumpToIndex(i)}
+                    style={{
+                      transformStyle: 'preserve-3d',
+                      transform: `rotateX(-${STEP_DEG * i}deg) translateZ(${DRUM_RADIUS}px)`,
+                      backfaceVisibility: 'hidden',
+                      opacity: isFront ? Math.max(0.25, cosT) : 0.12,
+                    }}
+                    className={`absolute -left-[145px] -top-[78px] h-[156px] w-[290px] cursor-pointer rounded-xl border p-4 transition-colors ${
+                      isActive
+                        ? 'border-[#EDB40B] bg-[#14141e]/95 shadow-[0_0_30px_rgba(237,180,11,0.18)]'
+                        : 'border-white/10 bg-[#14141e]/75 hover:border-white/30'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between text-[11px] font-mono">
+                      <span style={{ color: mod.accent }}>
+                        {mod.index} // {mod.category.toUpperCase()}
+                      </span>
+                      <span className="text-white/40">{mod.metricValue}</span>
+                    </div>
+                    <div className="mt-2 text-lg font-semibold tracking-tight text-white">
+                      {mod.title}
+                    </div>
+                    <div className="mt-1 text-xs text-white/60">{mod.subtitle}</div>
+                    <div className="mt-4 truncate font-mono text-[10px] text-white/40">
+                      {mod.file}
+                    </div>
                   </div>
-                  <div className="mt-2 text-lg font-semibold tracking-tight text-white">
-                    {mod.title}
-                  </div>
-                  <div className="mt-1 text-xs text-white/60">{mod.subtitle}</div>
-                  <div className="mt-4 truncate font-mono text-[10px] text-white/40">
-                    {mod.file}
-                  </div>
-                </div>
-              );
-            })}
+                );
+              })}
+            </div>
           </div>
 
-          <div className="pointer-events-none absolute bottom-3 left-0 right-0 z-30 text-center font-mono text-[10px] tracking-widest text-white/40 uppercase">
+          <div className="mt-3 text-center font-mono text-[10px] tracking-widest text-white/40 uppercase">
             Wheel • Drag • Arrow Keys
           </div>
         </div>

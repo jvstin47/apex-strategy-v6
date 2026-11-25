@@ -60,7 +60,7 @@ export const ArchitectureSection: React.FC = () => {
           {PIPELINE_STEPS.map((item, idx) => (
             <div
               key={item.step}
-              className="relative flex flex-col justify-between rounded-2xl border border-white/10 bg-[#14141e]/75 p-6 backdrop-blur-md"
+              className="relative flex flex-col justify-between rounded-2xl border border-white/10 bg-[#14141e]/75 p-6 backdrop-blur-md transition-colors hover:border-white/25"
             >
               <div>
                 <div className="flex items-center justify-between">

@@ -11,7 +11,7 @@ interface HeroSectionProps {
 export const HeroSection: React.FC<HeroSectionProps> = ({ onJumpSection }) => {
   const runsCount = useCountUp({ end: 10000, duration: 2200, delay: 700 });
   const testsCount = useCountUp({ end: 54, duration: 1800, delay: 900 });
-  const seasonCount = useCountUp({ end: 2023, duration: 2000, delay: 1100 });
+  const seasonCount = useCountUp({ end: 2023, duration: 2000, delay: 1100, useGrouping: false });
 
   return (
     <section className="relative flex min-h-screen w-full flex-col justify-between overflow-hidden bg-[#0a0e1c] font-sans">
@@ -241,9 +241,9 @@ const ScreenMonteCarlo: React.FC<{ onJumpSection: (id: string) => void }> = ({ o
         </div>
       </div>
 
-      {/* Signature Bottom Blur Glass Overlay */}
+      {/* Signature Bottom Blur Glass Overlay (kept below the SVG legend) */}
       <div
-        className="pointer-events-none absolute bottom-0 left-0 right-0 z-[7] h-[42%]"
+        className="pointer-events-none absolute bottom-0 left-0 right-0 z-[7] h-[27%]"
         style={{
           backdropFilter: 'blur(6px)',
           WebkitBackdropFilter: 'blur(6px)',
@@ -317,7 +317,14 @@ const ScreenSilverstoneMCTS: React.FC<{
             strokeDasharray="6 4"
           />
           <circle cx="185" cy="32" r="6" fill="#E10600" />
-          <text x="196" y="36" fill="#ffffff" fontSize="10" fontFamily="JetBrains Mono">
+          <text
+            x="185"
+            y="16"
+            textAnchor="middle"
+            fill="#ffffff"
+            fontSize="10"
+            fontFamily="JetBrains Mono"
+          >
             SC Lap 33 → Softs
           </text>
         </svg>
@@ -455,7 +462,7 @@ const ScreenVirtualGrid: React.FC<{ onJumpSection: (id: string) => void }> = ({ 
           className="h-[170px] w-1/2 rounded-t-2xl p-3.5"
         >
           <div className="text-[12px] text-white/60">Safety Car</div>
-          <div className="mt-1 font-mono text-[11px] text-[#E10600]">1.35x Pace</div>
+          <div className="mt-1 font-mono text-[11px] text-red-400">1.35x Pace</div>
           <div className="mt-6 text-[54px] font-semibold leading-[0.8] tracking-[-0.06em] text-white">
             8<span className="text-[28px] text-white/60">s</span>
           </div>

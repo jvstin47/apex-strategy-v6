@@ -5,6 +5,7 @@ interface UseCountUpOptions {
   duration?: number;
   delay?: number;
   decimals?: number;
+  useGrouping?: boolean;
 }
 
 /**
@@ -16,6 +17,7 @@ export function useCountUp({
   duration = 2200,
   delay = 0,
   decimals = 0,
+  useGrouping = true,
 }: UseCountUpOptions): string {
   const [value, setValue] = useState<number>(0);
 
@@ -59,5 +61,6 @@ export function useCountUp({
   if (decimals > 0) {
     return value.toFixed(decimals);
   }
-  return Math.round(value).toLocaleString('en-US');
+  const rounded = Math.round(value);
+  return useGrouping ? rounded.toLocaleString('en-US') : String(rounded);
 }
