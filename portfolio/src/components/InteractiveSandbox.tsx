@@ -34,27 +34,56 @@ export const InteractiveSandbox: React.FC = () => {
   const [regime, setRegime] = useState<Regime>('sc');
 
   const plan = useMemo(() => {
-    const pitLap =
-      regime === 'green'
-        ? Math.round(circuit.laps * 0.42)
-        : regime === 'vsc'
-          ? Math.round(circuit.laps * 0.52)
-          : regime === 'sc'
-            ? Math.round(circuit.laps * 0.62)
-            : Math.round(circuit.laps * 0.55);
+    const highWear =
+      circuit.id === 'bahrain' || circuit.id === 'silverstone' || circuit.id === 'suzuka';
 
-    const secondCompound: Compound =
-      regime === 'sc' || regime === 'red_flag'
-        ? startCompound === 'Soft'
-          ? 'Medium'
-          : 'Soft'
-        : startCompound === 'Hard'
-          ? 'Medium'
-          : 'Hard';
+    let stints: { compound: Compound; startLap: number; endLap: number }[] = [];
+
+    if (startCompound === 'Soft' && regime === 'green' && highWear) {
+      // Realistic 2-stop on high-wear circuits so Soft doesn't exceed ~15 laps
+      const pit1 = Math.round(circuit.laps * 0.27);
+      const pit2 = Math.round(circuit.laps * 0.65);
+      stints = [
+        { compound: 'Soft', startLap: 1, endLap: pit1 },
+        { compound: 'Hard', startLap: pit1 + 1, endLap: pit2 },
+        { compound: 'Medium', startLap: pit2 + 1, endLap: circuit.laps },
+      ];
+    } else {
+      const baseRatio =
+        startCompound === 'Soft' ? 0.31 : startCompound === 'Medium' ? 0.42 : 0.58;
+      const pitRatio =
+        regime === 'green'
+          ? baseRatio
+          : regime === 'vsc'
+            ? Math.min(0.56, baseRatio + 0.08)
+            : regime === 'sc'
+              ? Math.min(0.64, baseRatio + 0.14)
+              : 0.52;
+      const pitLap = Math.round(circuit.laps * pitRatio);
+
+      const secondCompound: Compound =
+        regime === 'sc' || regime === 'red_flag'
+          ? startCompound === 'Soft'
+            ? 'Medium'
+            : 'Soft'
+          : startCompound === 'Hard'
+            ? 'Medium'
+            : 'Hard';
+
+      stints = [
+        { compound: startCompound, startLap: 1, endLap: pitLap },
+        { compound: secondCompound, startLap: pitLap + 1, endLap: circuit.laps },
+      ];
+    }
+
+    const pitLaps = stints.slice(0, -1).map((s) => s.endLap);
+    const uniqueCompounds = new Set(stints.map((s) => s.compound)).size;
 
     const timeSaved =
       regime === 'green'
-        ? '0.0s (Baseline)'
+        ? stints.length === 3
+          ? '2-Stop Optimal'
+          : '0.0s (Baseline)'
         : regime === 'vsc'
           ? '-9.5s Pit Delta'
           : regime === 'sc'
@@ -64,11 +93,8 @@ export const InteractiveSandbox: React.FC = () => {
     const mctsConfidence =
       regime === 'green' ? '89%' : regime === 'vsc' ? '94%' : regime === 'sc' ? '97%' : '99%';
 
-    return { pitLap, secondCompound, timeSaved, mctsConfidence };
+    return { stints, pitLaps, uniqueCompounds, timeSaved, mctsConfidence };
   }, [circuit, startCompound, regime]);
-
-  const stint1Pct = Math.round((plan.pitLap / circuit.laps) * 100);
-  const stint2Pct = 100 - stint1Pct;
 
   return (
     <section id="sandbox" className="mx-auto w-full max-w-7xl px-6 py-20">
@@ -191,29 +217,42 @@ export const InteractiveSandbox: React.FC = () => {
               <div className="mt-6">
                 <div className="mb-2 flex justify-between font-mono text-[11px] text-white/50">
                   <span>LAP 1</span>
-                  <span className="text-white">BOX LAP {plan.pitLap}</span>
+                  <span className="text-white">
+                    BOX {plan.pitLaps.map((l) => `L${l}`).join(' • ')}
+                  </span>
                   <span>LAP {circuit.laps}</span>
                 </div>
 
                 <div className="flex h-10 w-full overflow-hidden rounded-xl border border-white/15 bg-white/5">
-                  <div
-                    style={{
-                      width: `${stint1Pct}%`,
-                      backgroundColor: COMPOUND_COLOR[startCompound],
-                    }}
-                    className="flex items-center justify-center border-r-2 border-[#0a0e1c] text-xs font-bold text-black transition-all duration-500"
-                  >
-                    {startCompound} (L1–{plan.pitLap})
-                  </div>
-                  <div
-                    style={{
-                      width: `${stint2Pct}%`,
-                      backgroundColor: COMPOUND_COLOR[plan.secondCompound],
-                    }}
-                    className="flex items-center justify-center text-xs font-bold text-black transition-all duration-500"
-                  >
-                    {plan.secondCompound} (L{plan.pitLap + 1}–{circuit.laps})
-                  </div>
+                  {plan.stints.map((stint, idx) => {
+                    const lapsInStint = stint.endLap - stint.startLap + 1;
+                    const widthPct = (lapsInStint / circuit.laps) * 100;
+                    const isLast = idx === plan.stints.length - 1;
+                    return (
+                      <div
+                        key={`${stint.compound}-${stint.startLap}`}
+                        style={{
+                          width: `${widthPct}%`,
+                          backgroundColor: COMPOUND_COLOR[stint.compound],
+                        }}
+                        className={`flex items-center justify-center text-xs font-bold text-black transition-all duration-500 ${
+                          !isLast ? 'border-r-2 border-[#0a0e1c]' : ''
+                        }`}
+                      >
+                        {stint.compound} (L{stint.startLap}–{stint.endLap})
+                      </div>
+                    );
+                  })}
+                </div>
+
+                <div className="mt-2.5 flex items-center justify-between font-mono text-[10px] text-white/50">
+                  <span>
+                    FIA 2-Compound Dry Rule:{' '}
+                    <span className="text-green-400">
+                      Satisfied ({plan.uniqueCompounds} compounds) ✓
+                    </span>
+                  </span>
+                  <span>{plan.stints.length - 1}-Stop Strategy</span>
                 </div>
               </div>
             </div>
