@@ -10,6 +10,10 @@ const UK_FLAG = 'https://framerusercontent.com/images/pqUTggaeyOivtzDImRzkBRdww.
 const MEDAL_ICON = 'https://framerusercontent.com/images/pIXUcwyAF0xzCIaKjtNLahHpasQ.png';
 const SILVERSTONE_IMG =
   'https://framerusercontent.com/images/raKAG2bJP9xeqi118VMniPLvbAA.png';
+const FERRARI_ICON =
+  'https://framerusercontent.com/images/sUDhzMuxKIOvqjSH5U1fn0QSXqI.png';
+const DRIVER_STRIP =
+  'https://framerusercontent.com/images/dAAdqktZVxBDjPKk97YCjZjsE.png';
 
 interface HeroSectionProps {
   onJumpSection: (id: string) => void;
@@ -29,6 +33,11 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onJumpSection }) => {
         className="pointer-events-none absolute inset-0 z-0 h-full w-full object-cover opacity-55"
       />
       <div className="pointer-events-none absolute inset-0 z-[1] bg-gradient-to-b from-black/75 via-black/70 to-[#0a0e1c]" />
+      {/* Soft Ferrari Rosso Corsa ambient glow */}
+      <div
+        className="pointer-events-none absolute left-1/2 top-[34%] z-[1] h-[520px] w-[760px] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-30 blur-[120px]"
+        style={{ background: 'radial-gradient(circle, #E10600 0%, #8B0000 45%, transparent 75%)' }}
+      />
 
       {/* Top Portfolio Navigation */}
       <header className="relative z-20 mx-auto flex w-full max-w-7xl items-center justify-between px-6 pt-5 pb-2">
@@ -259,9 +268,11 @@ const ScreenMonteCarlo: React.FC<{ onJumpSection: (id: string) => void }> = ({ o
 
       {/* Bottom Display Headline */}
       <div className="relative z-10 mt-auto pb-6">
-        <div className="animate-fade-slide-up delay-700 mb-2 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1 text-[11px] font-mono text-white/85">
-          <span>Fuel Burn + Track Evolution</span>
-        </div>
+        <img
+          src={DRIVER_STRIP}
+          alt="Driver Selector"
+          className="animate-fade-slide-up delay-700 mb-3 h-10 w-auto object-contain"
+        />
         <div className="animate-speed-reveal delay-800 text-[58px] font-semibold leading-[0.84] tracking-[-0.05em] text-white">
           10,000
           <br />
@@ -294,8 +305,9 @@ const ScreenSilverstoneMCTS: React.FC<{
 
       <div className="animate-fade-slide-up delay-400 relative z-10 mb-3">
         <div className="flex items-center gap-2 text-[15px] text-white/60">
-          <img src={UK_FLAG} alt="UK" className="h-5 w-5 object-contain" />
-          <span>United Kingdom • OpenF1</span>
+          <img src={FERRARI_ICON} alt="Scuderia Ferrari" className="h-4 w-4 object-contain" />
+          <img src={UK_FLAG} alt="UK" className="h-4 w-4 object-contain" />
+          <span>Scuderia • Silverstone</span>
         </div>
         <h2 className="mt-1 text-[46px] font-normal leading-[0.94] tracking-[-0.05em] text-white">
           Silverstone

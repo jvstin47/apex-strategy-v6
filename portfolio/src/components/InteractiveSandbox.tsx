@@ -21,6 +21,7 @@ const CIRCUITS: CircuitPreset[] = [
 
 type Compound = 'Soft' | 'Medium' | 'Hard';
 type Regime = 'green' | 'vsc' | 'sc' | 'red_flag';
+type RiskMode = 'conservative' | 'balanced' | 'undercut';
 
 const COMPOUND_COLOR: Record<Compound, string> = {
   Soft: '#E10600',
@@ -32,17 +33,19 @@ export const InteractiveSandbox: React.FC = () => {
   const [circuit, setCircuit] = useState<CircuitPreset>(CIRCUITS[0]);
   const [startCompound, setStartCompound] = useState<Compound>('Medium');
   const [regime, setRegime] = useState<Regime>('sc');
+  const [riskMode, setRiskMode] = useState<RiskMode>('balanced');
 
   const plan = useMemo(() => {
     const highWear =
       circuit.id === 'bahrain' || circuit.id === 'silverstone' || circuit.id === 'suzuka';
+    const riskShift = riskMode === 'undercut' ? -2 : riskMode === 'conservative' ? 2 : 0;
 
     let stints: { compound: Compound; startLap: number; endLap: number }[] = [];
 
     if (startCompound === 'Soft' && regime === 'green' && highWear) {
       // Realistic 2-stop on high-wear circuits so Soft doesn't exceed ~15 laps
-      const pit1 = Math.round(circuit.laps * 0.27);
-      const pit2 = Math.round(circuit.laps * 0.65);
+      const pit1 = Math.max(8, Math.round(circuit.laps * 0.27) + riskShift);
+      const pit2 = Math.min(circuit.laps - 6, Math.round(circuit.laps * 0.65) + riskShift);
       stints = [
         { compound: 'Soft', startLap: 1, endLap: pit1 },
         { compound: 'Hard', startLap: pit1 + 1, endLap: pit2 },
@@ -59,7 +62,10 @@ export const InteractiveSandbox: React.FC = () => {
             : regime === 'sc'
               ? Math.min(0.64, baseRatio + 0.14)
               : 0.52;
-      const pitLap = Math.round(circuit.laps * pitRatio);
+      const pitLap = Math.max(
+        8,
+        Math.min(circuit.laps - 6, Math.round(circuit.laps * pitRatio) + riskShift)
+      );
 
       const secondCompound: Compound =
         regime === 'sc' || regime === 'red_flag'
@@ -83,7 +89,9 @@ export const InteractiveSandbox: React.FC = () => {
       regime === 'green'
         ? stints.length === 3
           ? '2-Stop Optimal'
-          : '0.0s (Baseline)'
+          : riskMode === 'undercut'
+            ? '-1.4s Undercut Edge'
+            : '0.0s (Baseline)'
         : regime === 'vsc'
           ? '-9.5s Pit Delta'
           : regime === 'sc'
@@ -94,7 +102,7 @@ export const InteractiveSandbox: React.FC = () => {
       regime === 'green' ? '89%' : regime === 'vsc' ? '94%' : regime === 'sc' ? '97%' : '99%';
 
     return { stints, pitLaps, uniqueCompounds, timeSaved, mctsConfidence };
-  }, [circuit, startCompound, regime]);
+  }, [circuit, startCompound, regime, riskMode]);
 
   return (
     <section id="sandbox" className="mx-auto w-full max-w-7xl px-6 py-20">
@@ -118,7 +126,11 @@ export const InteractiveSandbox: React.FC = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 gap-6 rounded-2xl border border-white/10 bg-[#14141e]/80 p-6 backdrop-blur-xl lg:grid-cols-12 lg:p-8">
+        <div className="relative grid grid-cols-1 gap-6 overflow-hidden rounded-2xl border border-[#E10600]/25 bg-[#14141e]/85 p-6 shadow-[0_0_60px_rgba(225,6,0,0.08)] backdrop-blur-xl lg:grid-cols-12 lg:p-8">
+          <div
+            className="pointer-events-none absolute -left-24 -bottom-24 h-64 w-64 rounded-full opacity-20 blur-3xl"
+            style={{ background: 'radial-gradient(circle, #E10600, transparent 70%)' }}
+          />
           {/* Controls */}
           <div className="space-y-6 lg:col-span-5">
             <div>
@@ -186,11 +198,37 @@ export const InteractiveSandbox: React.FC = () => {
                     onClick={() => setRegime(r.id)}
                     className={`rounded-lg border px-3 py-2 text-xs font-semibold transition-colors ${
                       regime === r.id
-                        ? 'border-[#E10600] bg-[#E10600]/20 text-white'
+                        ? 'border-[#E10600] bg-[#E10600]/20 text-white shadow-[0_0_16px_rgba(225,6,0,0.25)]'
                         : 'border-white/10 bg-white/5 text-white/60 hover:text-white'
                     }`}
                   >
                     {r.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <label className="mb-2 block font-mono text-[11px] text-white/50 uppercase">
+                4. Pit-Wall Risk Appetite
+              </label>
+              <div className="grid grid-cols-3 gap-2">
+                {[
+                  { id: 'undercut' as RiskMode, label: 'Undercut (-2L)' },
+                  { id: 'balanced' as RiskMode, label: 'Balanced' },
+                  { id: 'conservative' as RiskMode, label: 'Overcut (+2L)' },
+                ].map((m) => (
+                  <button
+                    key={m.id}
+                    type="button"
+                    onClick={() => setRiskMode(m.id)}
+                    className={`rounded-lg border px-2.5 py-2 text-[11px] font-semibold transition-colors ${
+                      riskMode === m.id
+                        ? 'border-[#EDB40B] bg-[#EDB40B]/15 text-[#EDB40B]'
+                        : 'border-white/10 bg-white/5 text-white/60 hover:text-white'
+                    }`}
+                  >
+                    {m.label}
                   </button>
                 ))}
               </div>
