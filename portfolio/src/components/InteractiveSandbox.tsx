@@ -45,7 +45,9 @@ export const InteractiveSandbox: React.FC = () => {
 
     const secondCompound: Compound =
       regime === 'sc' || regime === 'red_flag'
-        ? 'Soft'
+        ? startCompound === 'Soft'
+          ? 'Medium'
+          : 'Soft'
         : startCompound === 'Hard'
           ? 'Medium'
           : 'Hard';
@@ -199,7 +201,7 @@ export const InteractiveSandbox: React.FC = () => {
                       width: `${stint1Pct}%`,
                       backgroundColor: COMPOUND_COLOR[startCompound],
                     }}
-                    className="flex items-center justify-center text-xs font-bold text-black transition-all duration-500"
+                    className="flex items-center justify-center border-r-2 border-[#0a0e1c] text-xs font-bold text-black transition-all duration-500"
                   >
                     {startCompound} (L1–{plan.pitLap})
                   </div>
